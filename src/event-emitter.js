@@ -22,6 +22,19 @@ define(function() {
         this._listeners[name].push(fn);
         return this;
     };
+    EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+
+
+    EventEmitter.prototype.once = function (name, fn) {
+        function doAndRemoveListener () {
+            this.removeListener(name, doAndRemoveListener);
+            fn.apply(this, arguments);
+        }
+        // Store original listener
+        doAndRemoveListener.listener = fn;
+        return this.on(name, doAndRemoveListener);
+    };
+
 
     /**
      * Removes a bound listener from the named event.
