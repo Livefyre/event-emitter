@@ -93,7 +93,16 @@ define(['jasmine', 'event-emitter'], function (jasmine, EventEmitter) {
 
 
 		describe('.listenerCount(emitter, event)', function () {
-
+			it('is a static method on EventEmitter', function () {
+				expect(EventEmitter.listenerCount).toEqual(jasmine.any(Function));
+			});
+			it('returns the number of listeners for an event', function () {
+				var ee = new EventEmitter(),
+					eventName = 'error';
+				ee.on(eventName, function () {});
+				ee.on(eventName, function () {});
+				expect(EventEmitter.listenerCount(ee, eventName)).toBe(2);
+			})
 		});
 
 	});

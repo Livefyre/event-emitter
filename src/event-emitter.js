@@ -11,6 +11,16 @@ define(function() {
         this._listeners = {};
     };
 
+
+    EventEmitter.listenerCount = function (emitter, eventName) {
+        var listeners = emitter._listeners[eventName];
+        if ( ! listeners) {
+            return 0;
+        }
+        return listeners.length;
+    };
+
+
     /**
      * Binds a listener function to an event name.
      * @param name {string} The event name to bind to.
