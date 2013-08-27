@@ -77,7 +77,17 @@ define(['jasmine', 'event-emitter'], function (jasmine, EventEmitter) {
 
 
 			describe('.emit(event, [arg1], [arg1], [...])', function () {
-
+				it('throws an Error on emit("error") if there are no error listeners', function () {
+					expect(function () {
+						ee.emit('error');
+					}).toThrow();
+				});
+				it('throws err on emit("error", err) if there are no error listeners', function () {
+					var err = new Error();
+					expect(function () {
+						ee.emit('error', err);
+					}).toThrow(err);
+				});
 			});
 
 

@@ -64,9 +64,20 @@ define(function() {
      * @param {...Object} Optional arguments to pass to each listener's callback.
      */
     EventEmitter.prototype.emit = function(name) {
-        var listeners = this._listeners[name] || [];
-        var args = slice.call(arguments, 1);
+        var listeners = this._listeners[name] || [],
+            args = slice.call(arguments, 1),
+            err;
         
+        // Throw on error event if there are no listeners
+        if (name === 'error' && ! listeners.length) {
+            err = args[0];
+            if (err instanceof Error) {
+                throw err;
+            } else {
+                throw TypeError('Uncaught, unspecified "error" event');
+            }
+        }
+
         for (var i in listeners) {
             try {
                 listeners[i].apply(this, args); 
