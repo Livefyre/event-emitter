@@ -53,6 +53,16 @@ define(['jasmine', 'event-emitter'], function (jasmine, EventEmitter) {
 				it('returns this', function () {
 					expect(ee.once('a', function () {})).toEqual(ee);
 				});
+				it('fires all listeners if there are multiple', function () {
+					var onEvent1 = jasmine.createSpy('onEvent1');
+					var onEvent2 = jasmine.createSpy('onEvent2');
+					ee.once('event', onEvent1);
+					ee.once('event', onEvent2);
+					ee.emit('event', 1);
+					ee.emit('event', 2);
+					expect(onEvent1.callCount).toBe(1);
+					expect(onEvent2.callCount).toBe(1);
+				});
 			});
 
 

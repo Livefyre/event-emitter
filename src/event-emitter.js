@@ -67,6 +67,12 @@ define(function() {
         var listeners = this._listeners[name] || [],
             args = slice.call(arguments, 1),
             err;
+
+        // Copy listeners in case executing them mutates the array
+        // e.g. .once() listeners remove themselves
+        if (listeners.length) {
+            listeners = listeners.slice();
+        }
         
         // Throw on error event if there are no listeners
         if (name === 'error' && ! listeners.length) {
@@ -78,7 +84,7 @@ define(function() {
             }
         }
 
-        for (var i in listeners) {
+        for (var i=0, numListeners=listeners.length; i < numListeners; i++) {
             try {
                 listeners[i].apply(this, args); 
             } catch(err) {
