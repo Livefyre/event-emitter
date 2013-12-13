@@ -34,14 +34,21 @@ define(function() {
     };
     EventEmitter.prototype.addListener = EventEmitter.prototype.on;
 
+    EventEmitter.prototype.singletonListeners = {};
 
     EventEmitter.prototype.once = function (name, fn) {
+        if (this.singletonListeners[name]) {
+            return;
+        }
+
         function doAndRemoveListener () {
             this.removeListener(name, doAndRemoveListener);
+            this.singletonListeners[name] = null;
             fn.apply(this, arguments);
         }
         // Store original listener
         doAndRemoveListener.listener = fn;
+        this.singletonListeners[name] = true;
         return this.on(name, doAndRemoveListener);
     };
 
@@ -73,7 +80,7 @@ define(function() {
         if (listeners.length) {
             listeners = listeners.slice();
         }
-        
+
         // Throw on error event if there are no listeners
         if (name === 'error' && ! listeners.length) {
             err = args[0];
@@ -86,7 +93,7 @@ define(function() {
 
         for (var i=0, numListeners=listeners.length; i < numListeners; i++) {
             try {
-                listeners[i].apply(this, args); 
+                listeners[i].apply(this, args);
             } catch(err) {
                 this.emit('error', err);
             }
