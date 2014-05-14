@@ -6,7 +6,6 @@ define(function() {
      * An Observable mixin for use with EventEmitter
      * @param {Object} that
      * @exports streamhub-sdk/observer
-     * @constructor
      */
     function Observer(that) {
         that._listeningTo = {};
@@ -36,7 +35,7 @@ define(function() {
 
     /**
      * Stop listening to the provided object
-     * @param {EventEmitter} obj
+     * @param {?EventEmitter} obj
      */
     function stopListening(obj) {
         if (obj) {
