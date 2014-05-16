@@ -1,6 +1,6 @@
 {
   "name": "event-emitter",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "main": [
     "./src/event-emitter.js"
   ],
@@ -8,6 +8,6 @@
     "requirejs": "~2.1.5"
   },
   "devDependencies": {
-    "jasmine": "1.3.0"
+    "jasmine": "*"
   }
 }
