@@ -7,6 +7,7 @@
     "email": "ben@livefyre.com"
   },
   "version": "0.0.1",
+  "main": "src/event-emitter.js",
   "devDependencies": {
     "bower": "1.0.0",
     "http-server": "*",
