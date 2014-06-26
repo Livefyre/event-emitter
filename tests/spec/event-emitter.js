@@ -98,6 +98,26 @@ define(['jasmine', 'event-emitter'], function (jasmine, EventEmitter) {
 						ee.emit('error', err);
 					}).toThrow(err);
 				});
+				it('what if your error handler throws an error? Emit errorOnError', function () {
+					var err = new Error();
+					var didError;
+					var didErrorOnError;
+					
+					runs(function () {
+						ee.on('errorOnError', function () {
+							didErrorOnError = true;
+						})
+						ee.on('error', function () {
+							didError = true;
+							throw err;
+						});
+						ee.emit('error');
+					});
+					
+					waitsFor(function () {
+						return didError && didErrorOnError;
+					});
+				});
 			});
 
 
