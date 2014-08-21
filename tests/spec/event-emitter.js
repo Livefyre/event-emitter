@@ -74,7 +74,7 @@ define(['jasmine', 'event-emitter'], function (jasmine, EventEmitter) {
 					ee.removeListener('cat', func);
 					expect(ee._listeners.cat.length).toBe(0);
 				});
-				it('does not remove a listener if there is not bound function', function () {
+				it('does not remove a listener if there is no bound function', function () {
 					ee.on('cat', function () {});
 					expect(ee._listeners.cat.length).toBe(1);
 					ee.removeListener('cat', function () {});
