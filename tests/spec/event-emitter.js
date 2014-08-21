@@ -67,7 +67,19 @@ define(['jasmine', 'event-emitter'], function (jasmine, EventEmitter) {
 
 
 			describe('.removeListener(event, listener)', function () {
-
+				it('removes an event listener', function () {
+					var func = function () {};
+					ee.on('cat', func);
+					expect(ee._listeners.cat.length).toBe(1);
+					ee.removeListener('cat', func);
+					expect(ee._listeners.cat.length).toBe(0);
+				});
+				it('does not remove a listener if there is not bound function', function () {
+					ee.on('cat', function () {});
+					expect(ee._listeners.cat.length).toBe(1);
+					ee.removeListener('cat', function () {});
+					expect(ee._listeners.cat.length).toBe(1);
+				});
 			});
 
 
@@ -102,7 +114,7 @@ define(['jasmine', 'event-emitter'], function (jasmine, EventEmitter) {
 					var err = new Error();
 					var didError;
 					var didErrorOnError;
-					
+
 					runs(function () {
 						ee.on('errorOnError', function () {
 							didErrorOnError = true;
@@ -113,7 +125,7 @@ define(['jasmine', 'event-emitter'], function (jasmine, EventEmitter) {
 						});
 						ee.emit('error');
 					});
-					
+
 					waitsFor(function () {
 						return didError && didErrorOnError;
 					});
