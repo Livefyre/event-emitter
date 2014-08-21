@@ -52,7 +52,11 @@ EventEmitter.prototype.once = function (name, fn) {
  */
 EventEmitter.prototype.removeListener = function(name, fn) {
     if (fn && this._listeners[name]) {
-        this._listeners[name].splice(indexOf(this._listeners[name], fn), 1);
+        var index = indexOf(this._listeners[name], fn);
+        if (index === -1) {
+            return;
+        }
+        this._listeners[name].splice(index, 1);
     }
 };
 
@@ -73,7 +77,7 @@ EventEmitter.prototype.emit = function(name) {
     if (listeners.length) {
         listeners = listeners.slice();
     }
-    
+
     // Throw on error event if there are no listeners
     if (name === 'error' && ! listeners.length) {
         err = args[0];
@@ -86,7 +90,7 @@ EventEmitter.prototype.emit = function(name) {
 
     for (var i=0, numListeners=listeners.length; i < numListeners; i++) {
         try {
-            listeners[i].apply(this, args); 
+            listeners[i].apply(this, args);
         } catch(err) {
             switch (name) {
                 case 'error':
