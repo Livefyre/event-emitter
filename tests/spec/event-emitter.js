@@ -84,7 +84,50 @@ define(['jasmine', 'event-emitter'], function (jasmine, EventEmitter) {
 
 
 			describe('.removeAllListeners([event])', function () {
+				it('removes all listeners when not passed an arg', function () {
+					var ee = new EventEmitter();
 
+					var aSpy1 = jasmine.createSpy();
+					var aSpy2 = jasmine.createSpy();
+					ee.on('a', aSpy1);
+					ee.on('a', aSpy2);
+					var bSpy = jasmine.createSpy();
+					ee.on('b', bSpy);
+
+					ee.removeAllListeners();
+
+					expect(EventEmitter.listenerCount(ee, 'a')).toBe(0);
+					expect(EventEmitter.listenerCount(ee, 'b')).toBe(0);
+					ee.emit('a');
+					ee.emit('b');
+					expect(aSpy1.callCount).toBe(0);
+					expect(aSpy2.callCount).toBe(0);
+					expect(bSpy.callCount).toBe(0);
+				});
+				it('removes only listeners of right event if passed an eventName', function () {
+					var ee = new EventEmitter();
+
+					var aSpy1 = jasmine.createSpy();
+					var aSpy2 = jasmine.createSpy();
+					ee.on('a', aSpy1);
+					ee.on('a', aSpy2);
+					var bSpy = jasmine.createSpy();
+					ee.on('b', bSpy);
+
+					ee.removeAllListeners('a');
+
+					expect(EventEmitter.listenerCount(ee, 'a')).toBe(0);
+					expect(EventEmitter.listenerCount(ee, 'b')).toBe(1);
+					ee.emit('a');
+					ee.emit('b');
+					expect(aSpy1.callCount).toBe(0);
+					expect(aSpy2.callCount).toBe(0);
+					expect(bSpy.callCount).toBe(1);
+				});
+				it('returns this', function () {
+					var ee = new EventEmitter();
+					expect(ee.removeAllListeners()).toEqual(ee);
+				});
 			});
 
 
