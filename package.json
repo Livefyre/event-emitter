@@ -6,7 +6,7 @@
     "name": "Benjamin Goering",
     "email": "ben@livefyre.com"
   },
-  "version": "0.0.5",
+  "version": "0.1.0",
   "main": "src/event-emitter.js",
   "devDependencies": {
     "bower": "1.0.0",
