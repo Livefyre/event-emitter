@@ -60,6 +60,39 @@ EventEmitter.prototype.removeListener = function(name, fn) {
     }
 };
 
+/**
+ * Remove all listeners for a given event or, if not passed, all events
+ * @param [eventName] {string} event to remove listeners for, or falsy for all
+ *     events
+ * @returns {EventEmitter} this
+ */
+EventEmitter.prototype.removeAllListeners = function (eventName) {
+    var eventMap = {};
+    if (eventName) {
+        eventMap[eventName] = this.listeners(eventName);
+    } else {
+        eventMap = this._listeners;
+    }
+    var listenersForEvent;
+    var numListenersForEvent = 0;
+    for (var event in eventMap) {
+        if ( ! eventMap.hasOwnProperty(event)) return;
+        listenersForEvent = eventMap[event].slice();
+        forEach(listenersForEvent, function (listener) {
+            this.removeListener(event, listener);
+        }, this);
+    }
+    return this;
+};
+
+/**
+ * Get all listeners for a given event
+ * @param [eventName] {string} event to get listeners for
+ * @returns {Array<Function>} the listeners for that eventName
+ */
+EventEmitter.prototype.listeners = function (eventName) {
+    return this._listeners[eventName].slice() || [];
+};
 
 /**
  * Emits an event from the object this is called on. Iterates through bound
@@ -141,3 +174,20 @@ function indexOf(arr, obj) {
     return -1;
 }
 
+/**
+ * Array forEach
+ */
+function forEach(arr, callback, thisObj) {
+    if (arr == null) {
+        return;
+    }
+    var i = -1,
+        len = arr.length;
+    while (++i < len) {
+        // we iterate over sparse items since there is no way to make it
+        // work properly on IE 7-8. see #64
+        if ( callback.call(thisObj, arr[i], i, arr) === false ) {
+            break;
+        }
+    }
+}
